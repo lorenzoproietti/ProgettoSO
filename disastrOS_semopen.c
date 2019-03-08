@@ -44,9 +44,6 @@ void internal_semOpen(){
 
   //Update last_sem_fd for the next SemDescriptor for the running process
   running->last_sem_fd++;
-  
-  //Add sem_d to the sem_descriptors list of the running process
-  List_insert(&running->sem_descriptors, running->sem_descriptors.last, (ListItem*)sem_d);
 
   //Alloc SemDescriptorPtr for sem_d
   SemDescriptorPtr* sem_d_ptr = SemDescriptorPtr_alloc(sem_d);
@@ -57,6 +54,9 @@ void internal_semOpen(){
 
   //Link sem_d_ptr with sem_d
   sem_d->ptr = sem_d_ptr;
+
+  //Add sem_d to the sem_descriptors list of the running process
+  List_insert(&running->sem_descriptors, running->sem_descriptors.last, (ListItem*)sem_d);
   
   //Add sem_d_ptr to the descriptors list of sem
   List_insert(&sem->descriptors, sem->descriptors.last, (ListItem*)sem_d_ptr);
