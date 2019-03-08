@@ -64,7 +64,6 @@ void internal_semOpen(){
   //Set the return value of the syscall(descriptor of sem)
   running->syscall_retvalue = sem_d->fd;
   
-  
   return;
 
 }
