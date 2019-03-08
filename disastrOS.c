@@ -287,6 +287,22 @@ void disastrOS_sleep(int sleep_time) {
   disastrOS_syscall(DSOS_CALL_SLEEP, sleep_time);
 }
 
+void disastrOS_semOpen(int semnum) {
+  disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
+}
+
+void disastrOS_semClose(int semnum) {
+  disastrOS_syscall(DSOS_CALL_SEMCLOSE, semnum);
+}
+
+void disastrOS_semPost(int semnum) {
+  disastrOS_syscall(DSOS_CALL_SEMPOST, semnum);
+}
+
+void disastrOS_semWait(int semnum) {
+  disastrOS_syscall(DSOS_CALL_SEMWAIT, semnum);
+}
+
 int disastrOS_getpid(){
   if (! running)
     return -1;
