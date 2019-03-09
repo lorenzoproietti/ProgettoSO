@@ -29,6 +29,7 @@ void internal_semWait(){
     running->status = Waiting;
     List_insert(&waiting_list, waiting_list.last, (ListItem*)running);
     running = (PCB*)List_detach(&ready_list,ready_list.first);
+    running->status = Running;
   }
 
   //Set the return value of syscall(0 if successful)
