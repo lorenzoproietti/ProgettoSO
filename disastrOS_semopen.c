@@ -5,6 +5,7 @@
 #include "disastrOS_syscalls.h"
 #include "disastrOS_semaphore.h"
 #include "disastrOS_semdescriptor.h"
+#include "disastrOS_globals.h"
 
 void internal_semOpen(){
 
@@ -22,10 +23,9 @@ void internal_semOpen(){
     return;
   }
 
-
   //Check if the sem with that id is already open, if it is not so we allocate it and add it to the semaphores_list(global structure), otherwise we take the sem with the function SemaphoreList_byId
-  Semaphore* sem;
-  if(!(sem = SemaphoreList_byId((SemaphoreList*)&semaphores_list, id))) {
+  Semaphore* sem = SemaphoreList_byId((SemaphoreList*)&semaphores_list, id);
+  if(!sem) {
     sem = Semaphore_alloc(id, 1);
     if(!sem) {
       running->syscall_retvalue = DSOS_ESEMOPEN_SEM_ALLOC;
