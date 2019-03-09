@@ -43,6 +43,8 @@ sigset_t signal_set;                       // process wide signal mask
 char signal_stack[STACK_SIZE];     
 volatile int disastrOS_time=0;
 
+int shared_sem_id;
+
 
 void timerHandler(int j, siginfo_t *si, void *old_context) {
   swapcontext(&running->cpu_state, &interrupt_context);
