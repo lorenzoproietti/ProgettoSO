@@ -146,6 +146,8 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   Timer_init();
   Resource_init();
   Descriptor_init();
+  Semaphore_init();
+  SemDescriptor_init();
   init_pcb=0;
 
   // populate the vector of syscalls and number of arguments for each syscall
@@ -244,6 +246,7 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   running->cpu_state.uc_stack.ss_flags = 0;
   running->cpu_state.uc_link = &main_context;
   
+  
   makecontext(&running->cpu_state, (void(*)()) f, 1, f_args);
 
 
@@ -287,20 +290,20 @@ void disastrOS_sleep(int sleep_time) {
   disastrOS_syscall(DSOS_CALL_SLEEP, sleep_time);
 }
 
-void disastrOS_semOpen(int semnum) {
-  disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
+int disastrOS_semOpen(int semnum) {
+  return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
 }
 
-void disastrOS_semClose(int semnum) {
-  disastrOS_syscall(DSOS_CALL_SEMCLOSE, semnum);
+int disastrOS_semClose(int semnum) {
+  return disastrOS_syscall(DSOS_CALL_SEMCLOSE, semnum);
 }
 
-void disastrOS_semPost(int semnum) {
-  disastrOS_syscall(DSOS_CALL_SEMPOST, semnum);
+int disastrOS_semPost(int semnum) {
+  return disastrOS_syscall(DSOS_CALL_SEMPOST, semnum);
 }
 
-void disastrOS_semWait(int semnum) {
-  disastrOS_syscall(DSOS_CALL_SEMWAIT, semnum);
+int disastrOS_semWait(int semnum) {
+  return disastrOS_syscall(DSOS_CALL_SEMWAIT, semnum);
 }
 
 int disastrOS_getpid(){
