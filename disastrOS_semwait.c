@@ -33,6 +33,5 @@ void internal_semWait(){
 
   //Set the return value of syscall(0 if successful)
   temp->syscall_retvalue = 0;
-  return;
 
 }
