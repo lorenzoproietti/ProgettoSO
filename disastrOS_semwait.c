@@ -9,6 +9,7 @@
 
 void internal_semWait(){
 
+  //Take the FD from the PCB of the running process and use it to get the sem_d
   int fd = running->syscall_args[0];
   SemDescriptor*  sem_d = SemDescriptorList_byFd(&running->sem_descriptors, fd);
   if(!sem_d) {
@@ -16,6 +17,7 @@ void internal_semWait(){
     return;
   }
 
+  //Decrease the count of sem and if your value is < 0 insert running in waiting list and change the running process
   Semaphore* sem = sem_d->semaphore;
   assert(sem);
   sem->count--;
@@ -29,6 +31,7 @@ void internal_semWait(){
     running = (PCB*)List_detach(&ready_list,ready_list.first);
   }
 
+  //Set the return value of syscall(0 if successful)
   temp->syscall_retvalue = 0;
   return;
 
