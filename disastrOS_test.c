@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "disastrOS.h"
+#include "disastrOS_globals.h"
 
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
@@ -26,6 +27,16 @@ void childFunction(void* args){
     assert(!res);
   }
   disastrOS_printStatus();
+  int fd = disastrOS_semOpen(shared_sem_id);
+  assert(fd >= 0);
+  int res = disastrOS_semWait(fd);
+  assert(!res);
+  disastrOS_preempt();
+  res = disastrOS_semPost(fd);
+  assert(!res);
+  disastrOS_printStatus();
+  res = disastrOS_semClose(fd);
+  assert(!res);
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
@@ -33,7 +44,6 @@ void childFunction(void* args){
 void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
-  disastrOS_spawn(sleeperFunction, 0);
   
 
   printf("I feel like to spawn 10 nice threads\n");
@@ -52,6 +62,7 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   int retval;
   int pid;
+  shared_sem_id = 2 * ready_list.size;
   while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
     disastrOS_printStatus();
     printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
