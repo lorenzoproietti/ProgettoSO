@@ -27,19 +27,13 @@ void internal_semOpen(){
   Semaphore* sem = SemaphoreList_byId((SemaphoreList*)&semaphores_list, id);
   if(!sem) {
     sem = Semaphore_alloc(id, 1);
-    if(!sem) {
-      running->syscall_retvalue = DSOS_ESEMOPEN_SEM_ALLOC;
-      return;
-    }
+    assert(sem);
     List_insert(&semaphores_list, semaphores_list.last, (ListItem*)sem);
   }
 
   //Alloc the SemDescriptor for sem associated with the running process
   SemDescriptor* sem_d = SemDescriptor_alloc(running->last_sem_fd, sem, running);
-  if(!sem_d) {
-    running->syscall_retvalue = DSOS_ESEMOPEN_SEMDESCRIPTOR_ALLOC;
-    return;
-  }
+  assert(sem_d);
 
 
   //Update last_sem_fd for the next SemDescriptor for the running process
@@ -47,10 +41,7 @@ void internal_semOpen(){
 
   //Alloc SemDescriptorPtr for sem_d
   SemDescriptorPtr* sem_d_ptr = SemDescriptorPtr_alloc(sem_d);
-  if(!sem_d_ptr) {
-    running->syscall_retvalue = DSOS_ESEMOPEN_SEMDESCRIPTORPTR_ALLOC;
-    return;
-  }
+  assert(sem_d_ptr);
 
   //Link sem_d_ptr with sem_d
   sem_d->ptr = sem_d_ptr;
