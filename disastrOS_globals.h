@@ -18,6 +18,8 @@ extern ListHead semaphores_list; // global list of semaphores
 extern ListHead timer_list;     //timers (concrete)
 extern volatile int disastrOS_time; //global time of disastrOS
 
+extern int shared_sem_id;
+
 // a resource can be a device, a file or an ipc thing
 
 typedef void(*SyscallFunctionType)();
