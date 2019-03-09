@@ -24,10 +24,7 @@ void internal_semClose(){
 
   //Get sem from sem_d
   Semaphore* sem = sem_d->semaphore;
-  if(!sem) {
-    running->syscall_retvalue = DSOS_ESEMCLOSE_SEM_NULL;
-    return;
-  }
+  assert(sem);
 
   //Remove sem_d_ptr from the list of sem descriptors
   SemDescriptorPtr* sem_d_ptr = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem*)(sem_d->ptr));
@@ -38,7 +35,7 @@ void internal_semClose(){
   SemDescriptor_free(sem_d);
 
   //Check if there are no other processes on sem, if this is so, remove it from the global structure and free the memory
-  if(sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {
+  if(sem->descriptors.size == 0) {
     sem = (Semaphore*)List_detach(&semaphores_list, (ListItem*)sem);
     assert(sem);
     Semaphore_free(sem);
