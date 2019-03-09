@@ -21,7 +21,7 @@ void childFunction(void* args){
     assert(res >= 0);
   }
   disastrOS_printStatus();
-  for (int i=0; i<(disastrOS_getpid()+1); ++i){
+  for (int i=0; i<disastrOS_getpid(); ++i){
     int res = disastrOS_semClose(i);
     assert(!res);
   }
